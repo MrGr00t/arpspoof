@@ -1,11 +1,11 @@
 name: .NET Core Desktop
 
 on:
-  workflow_dispatch: # 手动触发 Workflow
-  push: # 当代码推送到指定分支时触发
+  workflow_dispatch:
+  push:
     branches:
       - main
-  pull_request: # 当 PR 创建时触发
+  pull_request:
     branches:
       - main
 
@@ -15,10 +15,10 @@ jobs:
       matrix:
         configuration: [Release]
 
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     env:
-      Solution_Name: arpspoof.sln   # 文件名
+      Solution_Name: arpspoof.sln
 
     steps:
     - name: Checkout
@@ -26,26 +26,22 @@ jobs:
       with:
         fetch-depth: 0
 
-    # 安装 .NET Core 工作负载
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
 
-    # 添加 MSBuild 到 PATH
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2  # 保持在最新可用版本
+      uses: microsoft/setup-msbuild@v1.0.2
 
-    # 恢复应用程序以填充 obj 文件夹
     - name: Restore the application
-      run: |
-        msbuild ${{ github.workspace }}\arpspoof.sln
-      env:
-        Configuration: ${{ matrix.configuration }}
+      run: msbuild ${{ github.workspace }}\arpspoof.sln /t:Restore /p:Configuration=${{ matrix.configuration }}
 
-    # 上传构建产物
+    - name: Build the application
+      run: msbuild ${{ github.workspace }}\arpspoof.sln /p:Configuration=${{ matrix.configuration }}
+
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: arpspoof
-        path: ${{ github.workspace }}
+        path: ${{ github.workspace }}/bin/Release
