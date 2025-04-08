@@ -10,9 +10,7 @@ on:
       - main
 
 jobs:
-
   build:
-
     strategy:
       matrix:
         configuration: [Release]
@@ -36,7 +34,7 @@ jobs:
 
     # 添加 MSBuild 到 PATH
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.0.2  # 保持在最新可用版本
 
     # 恢复应用程序以填充 obj 文件夹
     - name: Restore the application
@@ -47,7 +45,7 @@ jobs:
 
     # 上传构建产物
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: arpspoof
         path: ${{ github.workspace }}
