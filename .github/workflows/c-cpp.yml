@@ -1,4 +1,4 @@
-name: .NET Core Desktop with Windows SDK 10.0
+name: .NET Core Desktop with Windows SDK 8.1
 
 on:
   workflow_dispatch:
@@ -18,8 +18,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      Solution_Name: arps“
-poof.sln
+      Solution_Name: arpspoof.sln
 
     steps:
     - name: Checkout
@@ -35,11 +34,14 @@ poof.sln
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
+    - name: Install Windows SDK 8.1
+      run: choco install windows-sdk-8.1 -y
+
     - name: Restore the application
-      run: msbuild ${{ github.workspace }}\arpspoof.sln /t:Restore /p:Configuration=${{ matrix.configuration }} /p:WindowsTargetPlatformVersion=10.0
+      run: msbuild ${{ github.workspace }}\arpspoof.sln /t:Restore /p:Configuration=${{ matrix.configuration }}
 
     - name: Build the application
-      run: msbuild ${{ github.workspace }}\arpspoof.sln /p:Configuration=${{ matrix.configuration }} /p:WindowsTargetPlatformVersion=10.0
+      run: msbuild ${{ github.workflow }}\arpspoof.sln /p:Configuration=${{ matrix.configuration }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
