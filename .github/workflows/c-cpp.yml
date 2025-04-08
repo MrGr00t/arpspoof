@@ -1,4 +1,4 @@
-name: .NET Core Desktop
+name: .NET Core Desktop with Windows SDK 10.0
 
 on:
   workflow_dispatch:
@@ -18,7 +18,8 @@ jobs:
     runs-on: windows-latest
 
     env:
-      Solution_Name: arpspoof.sln
+      Solution_Name: arps“
+poof.sln
 
     steps:
     - name: Checkout
@@ -35,10 +36,10 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Restore the application
-      run: msbuild ${{ github.workspace }}\arpspoof.sln /t:Restore /p:Configuration=${{ matrix.configuration }}
+      run: msbuild ${{ github.workspace }}\arpspoof.sln /t:Restore /p:Configuration=${{ matrix.configuration }} /p:WindowsTargetPlatformVersion=10.0
 
     - name: Build the application
-      run: msbuild ${{ github.workspace }}\arpspoof.sln /p:Configuration=${{ matrix.configuration }}
+      run: msbuild ${{ github.workspace }}\arpspoof.sln /p:Configuration=${{ matrix.configuration }} /p:WindowsTargetPlatformVersion=10.0
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
